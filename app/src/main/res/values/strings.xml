@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Custom Activity</string>
+    <string name="numberHintText">numberHintText</string>
+</resources>
