@@ -3,6 +3,7 @@ package com.example.customactivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
