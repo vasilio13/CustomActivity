@@ -13,7 +13,11 @@ import androidx.annotation.Nullable;
 
 import java.util.Random;
 
+import static java.lang.Math.round;
+
 public class CustomView extends View {
+
+    private MotionEvent event;
 
     public interface onMeasureListener {
         void onSizeChanged(int width, int height);
@@ -64,15 +68,30 @@ public class CustomView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         int size = SIZE / 2;
-        canvas.drawCircle(centerX - size, centerY - size, SIZE*4, paint);
-        initPaintBlue();
-        canvas.drawCircle(centerX - size, centerY - size, SIZE*2, paint);
+
+
+
         initPaintRandom();
-        canvas.drawArc(centerX-size-100,centerY-size-100,centerX-size+100,centerY-size+100, 0,90,true,paint);
+        canvas.drawArc(centerX - size - 350, centerY - size - 350, centerX - size + 350, centerY - size + 350, 0, 90, true, paint);
+
+        initPaintRandom();
+        canvas.drawArc(centerX - size - 350, centerY - size - 350, centerX - size + 350, centerY - size + 350, 90, 180, true, paint);
+
+        initPaint();
+        canvas.drawArc(centerX - size - 350, centerY - size - 350, centerX - size + 350, centerY - size + 350, 180, 270, true, paint);
+
+        initPaintRandom();
+        canvas.drawArc(centerX - size - 350, centerY - size - 350, centerX - size + 350, centerY - size + 350, 270, 360, true, paint);
+
+
+        initPaintRandom();
+        canvas.drawCircle(centerX - size, centerY - size, SIZE * 2, paint);
+
+
+
 
         super.onDraw(canvas);
     }
-
 
 
     private void initPaint() {
@@ -91,15 +110,25 @@ public class CustomView extends View {
 
     private void initPaintRandom() {
         Random rnd = new Random();
+        paint = new Paint();
+        paint.setAntiAlias(true);
         int rndcolor = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
         paint.setColor(rndcolor);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
     }
 
-    public void onTouch(MotionEvent event) {
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        this.event = event;
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-initPaintRandom();
+           centerX=round(event.getX());
+           centerY=round(event.getY());
+            invalidate();
+
 
         }
+        return super.onTouchEvent(event);
     }
 
-    }
+}
