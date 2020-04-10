@@ -30,4 +30,17 @@ public class CustomViewActivity extends AppCompatActivity {
         });
     }
 
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        CustomView customView = findViewById(R.id.customView);
+        customView.setOnActionTouchListener(new CustomView.OnActionTouchListener() {
+            @Override
+            public void setOnActionTouchListener(int x, int y) {
+                String message = String.format("width: %d height: %d", x, y);
+                Toast.makeText(CustomViewActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+        return super.onTouchEvent(event);
+    }
 }
