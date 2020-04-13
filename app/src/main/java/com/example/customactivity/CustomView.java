@@ -157,6 +157,12 @@ public class CustomView extends View {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
            //centerX=round(event.getX());
            //centerY=round(event.getY());
+
+            if (touchListener != null) {
+                touchListener.setOnActionTouchListener(round(event.getX()),round(event.getY()));
+            }
+
+
            if (includeCircle(round(event.getX()),round(event.getY()))) {
                 initStartPaints();
                 invalidate();
