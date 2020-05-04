@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -22,10 +23,6 @@ public class CustomView extends View {
 
     private MotionEvent event;
 
-    public interface onMeasureListener {
-        void onSizeChanged(int width, int height);
-    }
-
     public interface OnActionTouchListener {
         void setOnActionTouchListener(int x,int y);
     }
@@ -39,14 +36,12 @@ public class CustomView extends View {
     private int centerX;
     private int centerY;
 
-    private final int SIZE = 50;
 
-    private onMeasureListener listener;
+    private final int BIG_RADIUS = 350;
+    private final int LITTLE_RADIUS = 100;
+
     private OnActionTouchListener touchListener;
 
-    public void setListener(onMeasureListener listener) {
-        this.listener = listener;
-    }
     public void setOnActionTouchListener(OnActionTouchListener touchListener){this.touchListener = touchListener;}
 
     public CustomView(Context context) {
@@ -66,25 +61,13 @@ public class CustomView extends View {
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        centerX = w / 2;
-        centerY = h / 2;
-        initStartPaints();
-        if (listener != null) {
-            listener.onSizeChanged(w, h);
-        }
-    }
-
-    @Override
     protected void onDraw(Canvas canvas) {
-        int size = SIZE / 2;
 
-            canvas.drawArc(centerX - 350, centerY - 350, centerX + 350, centerY + 350, 0, 90, true, paintOne);
-            canvas.drawArc(centerX - 350, centerY - 350, centerX + 350, centerY + 350, 90, 90, true, paintTwo);
-        canvas.drawArc(centerX - 350, centerY  - 350, centerX + 350, centerY  + 350, 180, 90, true, paintThree);
-        canvas.drawArc(centerX  - 350, centerY  - 350, centerX  + 350, centerY  + 350, 270, 90, true, paintFour);
-        canvas.drawCircle(centerX , centerY , SIZE * 2, paintCircle);
+            canvas.drawArc(centerX - BIG_RADIUS, centerY - BIG_RADIUS, centerX + BIG_RADIUS, centerY + BIG_RADIUS, 0, 90, true, paintOne);
+            canvas.drawArc(centerX - BIG_RADIUS, centerY - BIG_RADIUS, centerX + BIG_RADIUS, centerY + BIG_RADIUS, 90, 90, true, paintTwo);
+        canvas.drawArc(centerX - BIG_RADIUS, centerY  - BIG_RADIUS, centerX + BIG_RADIUS, centerY  + BIG_RADIUS, 180, 90, true, paintThree);
+        canvas.drawArc(centerX  - BIG_RADIUS, centerY  - BIG_RADIUS, centerX  + BIG_RADIUS, centerY  + BIG_RADIUS, 270, 90, true, paintFour);
+        canvas.drawCircle(centerX , centerY , LITTLE_RADIUS, paintCircle);
 
         super.onDraw(canvas);
     }
@@ -98,7 +81,10 @@ public class CustomView extends View {
         paint.setStyle(Paint.Style.FILL);
     }
 
-    private void initStartPaints(){
+    public void initStartPaints(){
+        DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
+        centerX = displaymetrics.widthPixels/2;
+        centerY = displaymetrics.heightPixels/2;
         initPaintRandom();
         paintOne=paint;
         initPaintRandom();
@@ -119,35 +105,35 @@ public class CustomView extends View {
       if ((x<centerX)&(y>centerY)) {a=centerX-x;b=y-centerY;}
       if ((x<centerX)&(y<centerY)) {a=centerX-x;b=centerY-y;}
 
-        if (sqrt(a*a+b*b)<SIZE*2) return true;
+        if (sqrt(a*a+b*b)<LITTLE_RADIUS) return true;
         else return false;
     }
 
     private boolean includeQuarterOne (int x,int y) {
         int a=0,b=0;
         if ((x>centerX)&(y>centerY)) {a=x-centerX;b=y-centerY;}
-        if ((sqrt(a*a+b*b)>SIZE*2)&((sqrt(a*a+b*b)<350)))
+        if ((sqrt(a*a+b*b)>LITTLE_RADIUS)&((sqrt(a*a+b*b)<350)))
         return true; else return false;
     }
 
     private boolean includeQuarterTwo (int x,int y) {
         int a=0,b=0;
         if ((x<centerX)&(y>centerY)) {a=centerX-x;b=y-centerY;}
-        if ((sqrt(a*a+b*b)>SIZE*2)&((sqrt(a*a+b*b)<350)))
+        if ((sqrt(a*a+b*b)>LITTLE_RADIUS)&((sqrt(a*a+b*b)<350)))
             return true; else return false;
     }
 
     private boolean includeQuarterThree(int x,int y) {
         int a=0,b=0;
         if ((x<centerX)&(y<centerY)) {a=centerX-x;b=centerY-y;}
-        if ((sqrt(a*a+b*b)>SIZE*2)&((sqrt(a*a+b*b)<350)))
+        if ((sqrt(a*a+b*b)>LITTLE_RADIUS)&((sqrt(a*a+b*b)<350)))
             return true; else return false;
     }
 
     private boolean includeQuarterFour(int x,int y) {
         int a=0,b=0;
         if ((x>centerX)&(y<centerY)) {a=x-centerX;b=centerY-y;}
-        if ((sqrt(a*a+b*b)>SIZE*2)&((sqrt(a*a+b*b)<350)))
+        if ((sqrt(a*a+b*b)>LITTLE_RADIUS)&((sqrt(a*a+b*b)<350)))
             return true; else return false;
     }
 
@@ -157,7 +143,7 @@ public class CustomView extends View {
 
         this.event = event;
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-           //centerX=round(event.getX());
+           //centerX=round(event.getX()); experimental movement of the center of the figure
            //centerY=round(event.getY());
 
             if (touchListener != null) {

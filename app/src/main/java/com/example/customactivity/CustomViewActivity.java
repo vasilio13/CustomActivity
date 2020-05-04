@@ -20,14 +20,8 @@ public class CustomViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_custom_view);
 
         CustomView customView = findViewById(R.id.customView);
+        customView.initStartPaints();
 
-        customView.setListener(new CustomView.onMeasureListener() {
-            @Override
-            public void onSizeChanged(int width, int height) {
-                String message = String.format("width: %d height: %d", width, height);
-                Toast.makeText(CustomViewActivity.this, message, Toast.LENGTH_SHORT).show();
-            }
-        });
 
         customView.setOnActionTouchListener(new CustomView.OnActionTouchListener() {
             @Override
